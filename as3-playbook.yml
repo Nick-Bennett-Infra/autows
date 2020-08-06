@@ -1,0 +1,30 @@
+---
+- name: MY AS3 PLAYBOOK
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    uri_method: POST
+
+
+  vars_files:
+    - ../creds/big_creds.yml
+
+  tasks:
+
+  - name: DEPLOY AS3 DECLARATION
+    uri:
+      url: https://18.133.115.210/mgmt/shared/appsvcs/declare
+      user: "{{ bigip_user }}"
+      password: "{{ bigip_pass }}"
+      method: "{{ uri_method }}"
+      body: "{{ lookup('file','as3-declaration.json') }}"
+      force_basic_auth: yes
+      status_code:
+        - 200
+        - 204
+      body_format: json
+      validate_certs: no
+    register: as3_response
+...
